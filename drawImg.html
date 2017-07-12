@@ -1,0 +1,856 @@
+<!doctype html>
+<html>
+<head>
+<meta charset=utf-8>
+
+
+<script src='http://img.jwgl.org.cn/images/daoying/js/jquery-1.11.0.min.js'></script>
+<script src='https://res.wx.qq.com/open/js/jweixin-1.0.0.js'></script>
+<style type=text/css>
+
+body{font-size:16px;font-family:Courier New}*{-webkit-box-sizing:border-box}.img-contain_nodeid_127665 {width: 720px;height: initial;}.img-contain_nodeid_127665>img, .img-contain_nodeid_127665>div {width: 720px;height: initial;}.img-contain_nodeid_127665>div {background-position: center center;background-repeat: no-repeat;}.img-contain_nodeid_127666 {width: 300px;height: 120px;}.img-contain_nodeid_127666>img, .img-contain_nodeid_127666>div {width: 300px;height: 120px;}.img-contain_nodeid_127666>div {background-position: center center;background-repeat: no-repeat;}body, html { font-size: 100%;padding: 0; margin: 0;}/* Reset */*,*:after,*:before {-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;}/* Clearfix hack by Nicolas Gallagher: http://nicolasgallagher.com/micro-clearfix-hack/ */.clearfix:before,.clearfix:after {content: " ";display: table;}.clearfix:after {clear: both;}body{background: #494A5F;color: #D5D6E2;font-weight: 500;font-size: 1.05em;font-family: "Microsoft YaHei","瀹嬩綋","Segoe UI", "Lucida Grande", Helvetica, Arial,sans-serif, FreeSans, Arimo;}a{ color: rgba(255, 255, 255, 0.6);outline: none;text-decoration: none;-webkit-transition: 0.2s;transition: 0.2s;}a:hover,a:focus{color:#74777b;text-decoration: none;}html,body{margin:0;padding:0;height:100%;overflow:hidden;cursor:none;background: url(http://ooqzffapt.bkt.clouddn.com/printing/bg.png) repeat;}#chalkboard{position:absolute;top:300;left:200;width:50%;height:50%;z-index:1;cursor:none;background: url(http://ooqzffapt.bkt.clouddn.com/printing/bg.png) repeat;}.chalk{width:40px;height:50px;/*background:url(../img/chalk.png);*/position:absolute;padding:0;margin:0;bottom:0;left:0;cursor:none;z-index:2;}.eraser{width: 50px;height: 100px;margin-top: -50px;margin-left: -25px;background: #999;border-radius: 5px;box-shadow: inset 0 0 10px #545445;}.panel{width:100%;display: block;font-size: 32px;color: red;font-family: sans-serif;position:fixed;margin:1em;margin-bottom:1.5em;bottom:0;left:0;z-index:5;}.panel a{display: inline-block;padding: 0.5em 1em;background:red;text-decoration: none;cursor: pointer;opacity: 0.8;margin-right: 0.5em;color:#ffd24d;}.panel a:hover{opacity: 1;}.panel .link{float: right;margin-right:2em;background-color:#ff3b30;}.panel .cancel {float: right;margin-right:0.5em;display:none;background-color:#ff3b30;}.panel .clearAll, .panel .erase, .panel .draw {border: 1px solid #ffd24d;background-color: transparent;}.panel .clearAll {}.panel .erase, .panel .draw {}.mask {position:fixed;z-index:999999;top:0px;left:0px;right:0px;bottom:0px;text-align:center;background:rgba(0,0,0,0.5);display:none;}.mask .loading {display:block;width:500px;height:200px;font-size:35px;margin-top:380px;margin-left:auto;margin-right:auto;border-radius:15px;padding:50px 50px;background:#000;color:#fff;}
+</style>
+<script>
+
+
+        function is_weixin()
+        {  
+            var ua = navigator.userAgent.toLowerCase();  
+            if(ua.match(/MicroMessenger/i)=="micromessenger")
+            {  
+                return true;  
+            }
+            else
+            {  
+                return false;  
+            }  
+        }  
+
+        var moti_event_handlers = new Array();
+
+        function moti_add_handler(handler)
+        {
+            moti_event_handlers.push(handler)
+        }
+
+        function moti_fire_event(event_name, args)
+        {
+            if(event_name == 'mogo_sysevent_msgbox')
+            {
+                alert(args['text']);
+            }
+            else
+            {
+                for(var i=0; i<moti_event_handlers.length; i++)
+                {
+                    handler = moti_event_handlers[i];
+                    handler(event_name, args);
+                }
+            }
+        }
+
+
+
+            function isPC() {
+                var userAgentInfo = navigator.userAgent;
+                var Agents = ["Android", "iPhone",
+                            "SymbianOS", "Windows Phone",
+                            "iPad", "iPod"];
+                var flag = true;
+                for (var v = 0; v < Agents.length; v++) {
+                    if (userAgentInfo.indexOf(Agents[v]) > 0) {
+                        flag = false;
+                        break;
+                    }
+                }
+                return flag;
+            }
+            function init_viewport()
+            {
+                if(!isPC()) {
+                    if(/Android (\d+\.\d+)/.test(navigator.userAgent))
+                    {
+                        var version = parseFloat(RegExp.$1);
+
+                        if(version>2.3)
+                        {
+                            var width = window.outerWidth == 0 ? window.screen.width : window.outerWidth;
+                            var phoneScale = parseInt(width)/720;
+                            document.write('<meta name="viewport" content="width=720, minimum-scale = '+ phoneScale +', maximum-scale = '+ phoneScale +', target-densitydpi=device-dpi">');
+                        }
+                        else
+                        {
+                            document.write('<meta name="viewport" content="width=720, target-densitydpi=device-dpi">');    
+                        }
+                    }
+                    else if(navigator.userAgent.indexOf('iPhone') != -1)
+                    {
+                        var phoneScale = parseInt(window.screen.width)/720;
+                        document.write('<meta name="viewport" content="width=720, initial-scale=' + phoneScale +', user-scalable=no" /> ');         //0.75   0.82
+                    }
+                    else 
+                    {
+                        document.write('<meta name="viewport" content="width=720,initial-scale=0.64" /> ');         //0.75   0.82
+                    }
+                } else {
+                    document.write('<meta name="viewport" content="width=device-width, initial-scale=1">');
+                }
+            }
+            init_viewport();
+
+
+
+            function event_handler_nodeid_127667_setter()
+            {
+                nodeid_127666.style.webkitAnimation = "";
+            }
+
+            function event_handler_nodeid_127667(event_name, args)
+            {
+                if(event_name != "xiaoshi")
+                {
+                    return;
+                }
+
+                if("" != "")
+                {
+                    var old = nodeid_127666.style.webkitAnimation;
+                    if(1)
+                    {
+                        nodeid_127666.style.webkitAnimation = "";
+                        setTimeout("event_handler_nodeid_127667_setter()", 0);
+                    }
+                    else
+                    {
+                        nodeid_127666.style.webkitAnimation = "";
+                    }
+                }
+
+                nodeid_127666.style.display = 'none';
+            }
+        
+
+        var IntervalManager_nodeid_127668 = {
+            index: 0,
+            count_idx: 0,
+            count: 0,
+            interevent: null,
+            start: function(data) {
+                data = JSON.parse(data);
+                this.interevent = setInterval(function() {
+                    var index = this.index % data.length,
+                        event = data[index];
+                    if (event['event']) {
+                        moti_fire_event(event['event'], event);
+                    }
+                    if (event['post']) {
+                        console.log(event);
+                        this.sendpost(event);
+                    }
+                    this.index ++;
+
+                    if (this.count != 0 && index == data.length-1) {
+                        this.count_idx ++;
+                        if (this.count_idx == this.count) {
+                            clearInterval(this.interevent);
+                        }
+                    }
+                }.bind(this), 2000);
+            },
+            sendpost: function(data) {
+                data = data || {"who":this_who};
+                data["requesttype"] = "mogoajax";
+                data["pageid"] = this_pageid;
+                data["openid"] = this_openid;
+
+                jQuery.ajax({
+                    url : "/" + this_app + "/" + this_room + "/" + data["post"]["who"],
+                    type : "POST",
+                    traditional : true,
+                    data : data,
+                    success : function(data){
+                        if(data['ret'] != 0)
+                        {
+                            for(key in data)
+                            {
+                                //alert(key+":"+data[key])
+                            }
+                        }
+                        else
+                        {
+                            if(typeof(data["event"]) != "undefined")
+                            {
+                                moti_fire_event(data["event"], data);
+                            }
+
+                            if(typeof(data["msgbox"]) != "undefined")
+                            {
+                                alert(data["msgbox"]);
+                            }
+                        }
+                    }
+                });
+            }
+        }
+    
+
+
+function nodeid_127669_print_cancel() {
+    moti_fire_event("None");
+}
+
+$(document).ready(chalkboard);
+
+function chalkboard() {
+
+    $('#chalkboard').remove();
+    $('.chalk').remove();
+    $('body').prepend('<div id="nodeid_127669" style="position:fixed;z-index:1;"></div>');
+    $('body').prepend('<div class="mask"><span class="loading">请稍后...</span></div>');
+    $('#nodeid_127669').prepend('<div class="panel"><a class="clearAll">清空</a><a class="erase">橡皮擦</a><a class="draw">画笔</a><a class="link" target="_blank">下一步</a><a class="cancel" onclick="nodeid_127669_print_cancel()">取消</a></div>');
+    $('#nodeid_127669').prepend('<img src="http://ooqzffapt.bkt.clouddn.com/printing/bg.png" id="pattern" style="display:none;" width=50 height=50>');
+    $('#nodeid_127669').prepend('<canvas id="chalkboard"></canvas>');
+    $('#nodeid_127669').prepend('<div class="chalk"></div>');
+    
+
+
+    var minheight = 0;
+    !false ? minheight = 0: minheight = 160;
+    var canvas = document.getElementById("chalkboard");
+    $('#chalkboard').css('width', $(window).width());
+    $('#chalkboard').css('height', $(window).height()-minheight);
+    canvas.width = document.body.clientWidth;
+    canvas.height = document.body.clientHeight-minheight;
+
+    var ctx = canvas.getContext("2d");
+    ctx.shadowColor = "#ffffff";
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
+    ctx.shadowBlur = 0;
+
+    var touched = false;
+    var width = canvas.width;
+    var height = canvas.height;
+    console.log('width--', width, '--height---', height)
+    var mouseX = 0;
+    var mouseY = 0;
+    var mouseD = false;
+    var eraser = false;
+    var xLast = 0;
+    var yLast = 0;
+    var brushDiameter = 8;
+    var eraserWidth = 50;
+    var eraserHeight = 50;
+
+    $('#chalkboard').css('cursor', 'none');
+    $('.draw').hide();
+    document.onselectstart = function() {
+        return false;
+    };
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+    ctx.lineWidth = brushDiameter;
+    ctx.lineCap = 'round';
+
+    var patImg = document.getElementById('pattern');
+
+    canvas.addEventListener('touchmove', function(evt) {
+        touched = true
+        var touch = evt.touches[0];
+        mouseX = touch.pageX;
+        mouseY = touch.pageY;
+        if (mouseY < height && mouseX < width) {
+            evt.preventDefault();
+            $('.chalk').css('left', mouseX + 'px');
+            $('.chalk').css('top', mouseY + 'px');
+            //$('.chalk').css('display', 'none');
+            if (mouseD) {
+                if (eraser) {
+                    erase(mouseX, mouseY);
+                } else {
+                    draw(mouseX, mouseY);
+                }
+            }
+        }
+    }, false);
+    canvas.addEventListener('touchstart', function(evt) {
+        touched = true
+        //evt.preventDefault();
+        var touch = evt.touches[0];
+        mouseD = true;
+        mouseX = touch.pageX;
+        mouseY = touch.pageY;
+        xLast = mouseX;
+        yLast = mouseY;
+        if (!eraser) {
+            draw(mouseX + 1, mouseY + 1);
+        } else {
+            erase(mouseX, mouseY);
+        }
+
+    }, false);
+    canvas.addEventListener('touchend', function(evt) {
+        mouseD = false;
+    }, false);
+    $('#chalkboard').css('cursor', 'none');
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+    ctx.lineWidth = brushDiameter;
+    ctx.lineCap = 'round';
+
+    $(document).mousemove(function(evt) {
+        mouseX = evt.pageX;
+        mouseY = evt.pageY;
+        if (mouseY < height && mouseX < width) {
+            $('.chalk').css('left', (mouseX - 0.5 * brushDiameter) + 'px');
+            $('.chalk').css('top', (mouseY - 0.5 * brushDiameter) + 'px');
+            if (mouseD) {
+                if (eraser) {
+                    erase(mouseX, mouseY);
+                } else {
+                    draw(mouseX, mouseY);
+                }
+            }
+        } else {
+            $('.chalk').css('top', height - 10);
+        }
+    });
+    $(document).mousedown(function(evt) {
+        mouseD = true;
+        xLast = mouseX;
+        yLast = mouseY;
+        if (evt.button == 2) {
+            erase(mouseX, mouseY);
+            eraser = true;
+            $('.chalk').addClass('eraser');
+        } else {
+            if (!$('.panel').is(':hover')) {
+                draw(mouseX + 1, mouseY + 1);
+            }
+        }
+    });
+
+    $(document).mouseup(function(evt) {
+        mouseD = false;
+        if (evt.button == 2) {
+            eraser = false;
+            $('.chalk').removeClass('eraser');
+        }
+    });
+
+    $(document).keyup(function(evt) {
+        if (evt.keyCode == 32) {
+            ctx.clearRect(0, 0, width, height);
+            layPattern();
+        }
+    });
+
+    $(document).keyup(function(evt) {
+        if (evt.keyCode == 83) {
+            changeLink();
+        }
+    });
+
+    document.oncontextmenu = function() {
+        return false;
+    };
+
+    function draw(x, y) {
+    //    ctx.strokeStyle = 'rgba(255,255,255,' + (0.4 + Math.random() * 0.2) + ')';
+        ctx.strokeStyle = "#ffffff"
+        ctx.beginPath();
+        ctx.moveTo(xLast, yLast);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+
+        // Chalk Effect
+        if (true) {
+            var length = Math.round(Math.sqrt(Math.pow(x - xLast, 2) + Math.pow(y - yLast, 2)) / (5 / brushDiameter));
+            var xUnit = (x - xLast) / length;
+            var yUnit = (y - yLast) / length;
+            for (var i = 0; i < length; i++) {
+                var xCurrent = xLast + (i * xUnit);
+                var yCurrent = yLast + (i * yUnit);
+                var xRandom = xCurrent + (Math.random() - 0.5) * brushDiameter * 1.2;
+                var yRandom = yCurrent + (Math.random() - 0.5) * brushDiameter * 1.2;
+                ctx.clearRect(xRandom, yRandom, Math.random() * 2 + 2, Math.random() + 1);
+            }
+        }
+        
+
+        xLast = x;
+        yLast = y;
+    }
+
+    function erase(x, y) {
+        var length = Math.round(Math.sqrt(Math.pow(x - xLast, 2) + Math.pow(y - yLast, 2)) / (5 / brushDiameter));
+        var xUnit = (x - xLast) / length;
+        var yUnit = (y - yLast) / length;
+        for (var i = 0; i < length; i++) {
+            var xCurrent = xLast + (i * xUnit);
+            var yCurrent = yLast + (i * yUnit);
+            var xRandom = xCurrent + (Math.random() - 0.5) * brushDiameter * 1.2;
+            var yRandom = yCurrent + (Math.random() - 0.5) * brushDiameter * 1.2;
+            ctx.clearRect(xRandom, yRandom, Math.random() * 2 + 4, Math.random() + 3);
+        }
+
+        // ctx.clearRect(x - 0.5 * 0.2 * eraserWidth, y - 0.5 * 0.2 * eraserHeight, 0.2 * eraserWidth, 0.2 * eraserHeight);
+    }
+
+    function saveToQiniu(dataurl, callback) {
+        $(".mask").css("display", "block");
+        var _self = this;
+        var Qiniu_UploadUrl = "http://upload.qiniu.com";
+        $.get('/sys/qiniutoken/get?requesttype=mogoajax&ftype=canvasimg&app='+this_app+'&room='+this_room+'&who='+this_who+'&pageid='+this_pageid+'&openid='+this_openid, function(res) {
+            if (res.ret == 0) {
+                var fd = new FormData();
+                var token = res.token;
+                fd.append('token', token);
+                var blob = dataURLtoBlob(dataurl);
+                fd.append('file', blob, 'image.gif');
+                var key = res.key;
+                fd.append('key', key);
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', Qiniu_UploadUrl, true);
+                xhr.upload.addEventListener("progress", function(evt) {}, false);
+                xhr.onreadystatechange = function(response) {
+                    // $(".mask").css("display", "none");
+                    setTimeout(function () {
+                        $(".mask").css("display", "none");
+                      }, 300);
+                    if (xhr.readyState == 4 && xhr.status == 200 && xhr.responseText != "") {
+                        var ret = JSON.parse(xhr.responseText);
+                        console.log(ret);
+                        if(ret['key']) {
+                            callback && callback(ret['key']);
+                        } else {
+                            alert('upto qiniu fail');
+                        }
+                    };
+                };
+                xhr.send(fd);
+            } else {
+                console.log(res);
+                alert('get token fail');
+            }
+        })
+    }
+
+    function dataURLtoBlob(dataurl) {
+        var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+        while(n--){
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+        return new Blob([u8arr], {type:mime});    
+    }
+
+    function fetchToMogo(qiniukey) {
+        var draw = "true";
+        if (!touched) {
+            draw = "false";
+        }
+        url = "/" + this_app + "/" + this_room + "/_paintover?requesttype=mogoajax&actiontype=printing&key=" + qiniukey + "&draw=" + draw + "&pageid=" + this_pageid + "&" + 'who=_paintover&';
+        $.get(url, function(res) {
+            console.log(url)
+            console.log(res);
+            if(res['ret'] != 0) {
+                for(key in res)
+                {
+                    alert(key+":"+res[key])
+                }
+                console.log(res);
+            } else {
+                if(typeof(res["event"]) != "undefined") {
+                    moti_fire_event(res["event"], res);
+                }
+
+                if(typeof(res["msgbox"]) != "undefined")
+                {
+                    alert(res["msgbox"]);
+                }
+
+                if (typeof(res["goto"]) != "undefined") {
+                    var uri = "/" + this_app + "/" + this_room + "/" + res["goto"];
+                    delete res["goto"];
+                    var params = ["pageid="+this_pageid];
+                    for(key in res) {
+                        var value = encodeURIComponent(res[key]);
+                        params.push(key + "=" + value);
+                    }
+                    var params_str = params.join("&");
+                    window.location.href = uri + "?" + params_str + "&" + 'who=_paintover&';
+                }
+            }
+        })
+    }
+
+    $('.link').click(function(evt) {
+
+        $('.download').remove();
+
+        var imgCanvas = document.createElement('canvas');
+        var imgCtx = imgCanvas.getContext("2d");
+        var pattern = imgCtx.createPattern(patImg, 'repeat');
+
+        imgCanvas.width = width;
+        imgCanvas.height = height;
+
+        imgCtx.fillStyle = pattern;
+        imgCtx.rect(0, 0, width, height);
+        imgCtx.fill();
+
+
+        if (!touched && false) {
+            $(".mask").css("display", "block");
+            $(".mask .loading").html("您还没画图呢<br>请先画一个吧")
+            setTimeout(function () {
+                $(".mask").css("display", "none");
+                $(".mask .loading").html("请稍后...")
+            }, 1000);
+            return
+        }
+
+        var newCanvas = document.createElement('canvas');
+        context = newCanvas.getContext("2d");
+        // 创建新图片   
+    var img = new Image();
+    img.src = canvas.toDataURL("image/png");
+
+    img.addEventListener("load", function() {
+        // 绘制图片到canvas上   
+        newCanvas.width = img.width;
+        newCanvas.height = img.height;
+
+        context.drawImage(img, 0, 0);
+
+        var x = 0;
+        var y = 0;
+        var list = [];
+        // 将canvas的透明背景设置成白色   
+        var imageData = context.getImageData(0, 0, newCanvas.width, newCanvas.height);
+        console.log("img.width---", img.width, img.height, imageData.data.length)
+        for (var i = 0; i < imageData.data.length; i += 4) {
+            // 当该像素是透明的，则设置成白色   
+            if (imageData.data[i + 3] == 0) { 
+                continue
+            }
+
+            y = parseInt(i / (newCanvas.width * 4));
+            x = (i / 4) % newCanvas.width;
+
+            list.push({
+                'x': x,
+                'y': y
+            })
+        }
+        var max_x = 0;
+        var max_y = 0;
+        var min_x = newCanvas.width;
+        var min_y = newCanvas.height;
+
+        for (var i = 0; i < list.length; i++) {
+            if (list[i].x >= max_x) {
+                max_x = list[i].x
+            }
+            if (list[i].y >= max_y) {
+                max_y = list[i].y
+            }
+            if (list[i].x <= min_x) {
+                min_x = list[i].x
+            }
+            if (list[i].y <= min_y) {
+                min_y = list[i].y
+            }
+        }
+
+        console.log(min_x, max_x, min_y, max_y)
+
+        var crop_canvas = document.createElement('canvas');
+        crop_canvas.width = max_x-min_x;
+        crop_canvas.height = max_y-min_y;
+
+        crop_canvas.getContext('2d').drawImage(img, min_x, min_y, crop_canvas.width, crop_canvas.height, 0, 0, crop_canvas.width, crop_canvas.height); 
+        
+        if(false) {
+            canvas = crop_canvas
+        }
+
+        saveToQiniu( canvas.toDataURL("image/png"), function(qiniukey) {
+            fetchToMogo(qiniukey);
+        } );
+    }, false);
+
+
+
+
+        
+    });
+
+    $('.erase').click(function(evt) {
+        eraser = true;
+        $('.erase').hide();
+        $('.draw').show();
+    });
+
+    $('.draw').click(function(evt) {
+        eraser = false;
+        $('.draw').hide();
+        $('.erase').show();
+    });
+
+    $('.clearAll').click(function(evt) {
+
+        touched = false;
+        ctx.clearRect(0, 0, document.body.clientWidth,document.body.clientHeight);
+    });
+
+
+    $(window).resize(function() {
+        chalkboard();
+    });
+
+}
+
+        
+
+        function nodeid_127670_jumpto(eventname, args) {
+            if (eventname == 'docancel') {
+                window.location.href = 'http://mp.weixin.qq.com/s/Bt51_u5UDFxulGlo9jK5pQ';
+            }
+        }
+    
+var this_app='health';
+var this_who='gopainting';
+var this_room='drawyinxiang2';
+var this_mpid='magicmeih';
+
+            var Logger = {
+                data: {
+                    app: this_app,
+                    room: this_room,
+                    who: this_who,
+                    mpid: this_mpid,
+                    openid: this_openid,
+                    pageid: this_pageid
+                },
+                set: function(key, value) {
+                    if(!key || !value) return;
+                    this.data[key] = value;
+                },
+                send: function() {
+                    if(this.checkcookie()) {
+                        $.post(
+                            '/sys/debug/setlog?requesttype=mogoajax',
+                            this.data,
+                            function(res) {
+                                console.log(res);
+                            }
+                        )
+                    }
+                },
+                checkcookie: function() {
+                    var name = 'debug';
+                    var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+                    if(arr=document.cookie.match(reg)) {
+                        if( unescape(arr[2]) == 'true' ) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+                    else {
+                        return false;
+                    }
+                }
+            }
+        
+var this_pageid='c5ed1c422f6fc061b80feea5e6e6b603';
+var this_openid='openid00000000';
+
+    wx.config({
+        debug     : false,
+        appId     : 'wx99b36ff141f412cd',
+        timestamp : 10000,
+        nonceStr  : 'hello',
+        signature : 'c1642c96b7ce15c6dce57dfa38e7b65105ef9bcd',
+        jsApiList : [
+            'onMenuShareTimeline',
+            'onMenuShareAppMessage',
+            'onMenuShareQQ',
+            'onMenuShareQZone',
+            'closeWindow',
+            'hideAllNonBaseMenuItem',
+            'showMenuItems',
+            'showAllNonBaseMenuItem',
+            'chooseImage',
+            'uploadImage',
+            'startRecord',
+            'stopRecord',
+            'uploadVoice',
+            'playVoice',
+            'pauseVoice',
+            'stopVoice'
+            ]
+        });
+
+    function on_wxready()
+    {
+        
+    wx_share_title = "★ 你^心中的我^是什么样子的？~";
+    wx_share_desc  = "来画画你印象中的我，匿名的哦~ ";
+    wx_share_link  = "http://mobaoc.wexmall.cn/health/drawyinxiang2/gopainting?hostid=24068&pageid=c5ed1c422f6fc061b80feea5e6e6b603";
+    wx_share_img   = "http://img.jwgl.org.cn/image/draw/yu/hua.jpg";
+    wx_share_goto  = "http://mp.weixin.qq.com/s/Bt51_u5UDFxulGlo9jK5pQ";
+    reset_share_info();
+
+
+    wx_timeline_title = "★ 你^心中的我^是什么样子的？~";
+    wx_timeline_link  = "http://mobaoc.wexmall.cn/health/drawyinxiang2/gopainting?hostid=24068&pageid=c5ed1c422f6fc061b80feea5e6e6b603";
+    wx_timeline_img   = "http://img.jwgl.org.cn/image/draw/yu/hua.jpg";
+    wx_timeline_goto  = "http://mp.weixin.qq.com/s/Bt51_u5UDFxulGlo9jK5pQ";
+    reset_timeline_info();
+
+        moti_fire_event("wxready", null);
+    }
+
+    wx.ready(on_wxready);
+
+    var wx_share_title = "title";
+    var wx_share_desc  = "desc";
+    var wx_share_link  = "http://www.qq.com";
+    var wx_share_img   = "";
+    var wx_share_goto  = "";
+    
+    var wx_timeline_title = "title";
+    var wx_timeline_link  = "http://www.qq.com";
+    var wx_timeline_img   = "";
+    var wx_timeline_goto  = "";
+
+    function reset_timeline_title(title)
+    {
+        wx_timeline_title = title;
+        reset_timeline_info();
+    }
+
+    function reset_timeline_link(link)
+    {
+        wx_timeline_link = link;
+        reset_timeline_info();
+    }
+
+    function reset_timeline_img(img)
+    {
+        wx_timeline_img = img;
+        reset_timeline_info();
+    }
+    
+    function reset_timeline_goto(url)
+    {
+        wx_timeline_goto = url;
+        reset_timeline_info();
+    }
+
+    function reset_share_title(title)
+    {
+        wx_share_title = title;
+        reset_share_info();
+    }
+
+    function reset_share_desc(desc)
+    {
+        wx_share_desc = desc;
+        reset_share_info();
+    }
+
+    function reset_share_link(link)
+    {
+        wx_share_link = link;
+        reset_share_info();
+    }
+
+    function reset_share_img(img)
+    {
+        wx_share_img = img;
+        reset_share_info();
+    }
+
+    function reset_share_goto(url)
+    {
+        wx_share_goto = url;
+        reset_share_info();
+    }
+    
+    function reset_share_info()
+    {
+        wx.onMenuShareAppMessage({
+            title  : wx_share_title,
+            desc   : wx_share_desc,
+            link   : wx_share_link,
+            imgUrl : wx_share_img,
+            success : function(){
+                if(wx_share_goto != "")
+                {
+                    location.href = wx_share_goto;
+                }
+            },
+            fail: function(e) {
+                console.log('share fail', e);
+            },
+            complete: function(e) {
+                console.log('share complete', e);
+            }
+        });
+    }
+
+    function reset_timeline_info()
+    {
+        wx.onMenuShareTimeline({
+            title   : wx_timeline_title,
+            link    : wx_timeline_link,
+            imgUrl  : wx_timeline_img,
+            success : function(){
+                if(wx_timeline_goto != "")
+                {
+                    location.href = wx_timeline_goto;
+                }
+            },
+            fail: function(e) {
+                console.log('share fail', e);
+            },
+            complete: function(e) {
+                console.log('share complete', e);
+            }
+        });
+    }
+
+
+
+            function update_wxform()
+            {
+                
+            }
+            
+
+$(function() {
+
+moti_add_handler(event_handler_nodeid_127667);
+
+                IntervalManager_nodeid_127668.start('[{"event": "xiaoshi"}]');
+            
+moti_add_handler(nodeid_127670_jumpto);
+
+        if(!is_weixin())
+        {
+            moti_fire_event("wxready", null);
+        }
+        
+})
+</script>
+<title></title>
+</head>
+<body  style=''><div id='nodeid_127665' class='img-contain_nodeid_127665' style='position:absolute;top:0px;z-index:10;width:720px;left:0px'><img id="nodeid_127665_img" style='vertical-align:top;font-size:29px;text-align:center;line-height:557px' src='http://img.jwgl.org.cn/images/diudiu/drawme/drawbg1.jpg'></div><div  style='font-size:28px;font-weight:600;color:#ffff;top:218px;height:80px;width:720px;z-index:11;position:absolute;text-align:center;left:0px'>匿名的，所以请尽管画吧~</div><div id='nodeid_127666' class='img-contain_nodeid_127666' style='top:300px;height:120px;width:300px;z-index:10;position:absolute;left:200px'><img id="nodeid_127666_img" style='vertical-align:top;font-size:29px;text-align:center;line-height:557px' src='http://img.jwgl.org.cn/image/drawgame/button/tishi.png'></div>
+            <form id='wxwebform' action='' method='post'>
+            </form>
+            </body>
+            </html>

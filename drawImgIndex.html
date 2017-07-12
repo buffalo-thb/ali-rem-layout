@@ -1,0 +1,374 @@
+<!doctype html>
+<html>
+<head>
+<meta charset=utf-8>
+
+
+<script src='http://img.jwgl.org.cn/images/daoying/js/jquery-1.11.0.min.js'></script>
+<script src='https://res.wx.qq.com/open/js/jweixin-1.0.0.js'></script>
+<style type=text/css>
+
+body{font-size:16px;font-family:Courier New}*{-webkit-box-sizing:border-box}.fix-bg {position: fixed;width: 100%;height: 100%;margin: 0 auto;z-index:-1;background-size: cover;background-position: center center;/*background-position: 50%;*/background-repeat: no-repeat;}.img-contain_nodeid_129192 {width: 100%;height: initial;}.img-contain_nodeid_129192>img, .img-contain_nodeid_129192>div {width: 100%;height: initial;}.img-contain_nodeid_129192>div {background-position: center center;background-repeat: no-repeat;}.img-contain_nodeid_129193 {width: 100%;height: initial;}.img-contain_nodeid_129193>img, .img-contain_nodeid_129193>div {width: 100%;height: initial;}.img-contain_nodeid_129193>div {background-position: center center;background-repeat: no-repeat;}.img-contain_nodeid_129194 {width: 100%;height: initial;}.img-contain_nodeid_129194>img, .img-contain_nodeid_129194>div {width: 100%;height: initial;}.img-contain_nodeid_129194>div {background-position: center center;background-repeat: no-repeat;}.img-contain_nodeid_129195 {width: 100%;height: initial;}.img-contain_nodeid_129195>img, .img-contain_nodeid_129195>div {width: 100%;height: initial;}.img-contain_nodeid_129195>div {background-position: center center;background-repeat: no-repeat;}.img-contain_nodeid_129196 {width: 100%;height: initial;}.img-contain_nodeid_129196>img, .img-contain_nodeid_129196>div {width: 100%;height: initial;}.img-contain_nodeid_129196>div {background-position: center center;background-repeat: no-repeat;}.img-contain_nodeid_129197 {width: 100%;height: initial;}.img-contain_nodeid_129197>img, .img-contain_nodeid_129197>div {width: 100%;height: initial;}.img-contain_nodeid_129197>div {background-position: center center;background-repeat: no-repeat;}.img-contain_nodeid_129198 {width: 100%;height: initial;}.img-contain_nodeid_129198>img, .img-contain_nodeid_129198>div {width: 100%;height: initial;}.img-contain_nodeid_129198>div {background-position: center center;background-repeat: no-repeat;}.img-contain_nodeid_129199 {width: 100%;height: initial;}.img-contain_nodeid_129199>img, .img-contain_nodeid_129199>div {width: 100%;height: initial;}.img-contain_nodeid_129199>div {background-position: center center;background-repeat: no-repeat;}.img-contain_nodeid_129200 {width: 100%;height: initial;}.img-contain_nodeid_129200>img, .img-contain_nodeid_129200>div {width: 100%;height: initial;}.img-contain_nodeid_129200>div {background-position: center center;background-repeat: no-repeat;}.img-contain_nodeid_129201 {width: 100%;height: initial;}.img-contain_nodeid_129201>img, .img-contain_nodeid_129201>div {width: 100%;height: initial;}.img-contain_nodeid_129201>div {background-position: center center;background-repeat: no-repeat;}.img-contain_nodeid_129202 {width: 100%;height: initial;}.img-contain_nodeid_129202>img, .img-contain_nodeid_129202>div {width: 100%;height: initial;}.img-contain_nodeid_129202>div {background-position: center center;background-repeat: no-repeat;}.img-contain_nodeid_129203 {width: 100%;height: initial;}.img-contain_nodeid_129203>img, .img-contain_nodeid_129203>div {width: 100%;height: initial;}.img-contain_nodeid_129203>div {background-position: center center;background-repeat: no-repeat;}@-webkit-keyframes ef_48225 {from, to {-webkit-transform: translate3d(0, 0, 0);transform: translate3d(0, 0, 0);}10%, 30%, 50%, 70%, 90% {-webkit-transform: translate3d(-10px, 0, 0);transform: translate3d(-10px, 0, 0);}20%, 40%, 60%, 80% {-webkit-transform: translate3d(10px, 0, 0);transform: translate3d(10px, 0, 0);}}.img-contain_nodeid_129206 {width: 100%;height: initial;}.img-contain_nodeid_129206>img, .img-contain_nodeid_129206>div {width: 100%;height: initial;}.img-contain_nodeid_129206>div {background-position: center center;background-repeat: no-repeat;}.img-contain_nodeid_129207 {width: 100%;height: initial;}.img-contain_nodeid_129207>img, .img-contain_nodeid_129207>div {width: 100%;height: initial;}.img-contain_nodeid_129207>div {background-position: center center;background-repeat: no-repeat;}.img-contain_nodeid_129208 {width: 100%;height: initial;}.img-contain_nodeid_129208>img, .img-contain_nodeid_129208>div {width: 100%;height: initial;}.img-contain_nodeid_129208>div {background-position: center center;background-repeat: no-repeat;}
+</style>
+<script>
+
+
+        function is_weixin()
+        {  
+            var ua = navigator.userAgent.toLowerCase();  
+            if(ua.match(/MicroMessenger/i)=="micromessenger")
+            {  
+                return true;  
+            }
+            else
+            {  
+                return false;  
+            }  
+        }  
+
+        var moti_event_handlers = new Array();
+
+        function moti_add_handler(handler)
+        {
+            moti_event_handlers.push(handler)
+        }
+
+        function moti_fire_event(event_name, args)
+        {
+            if(event_name == 'mogo_sysevent_msgbox')
+            {
+                alert(args['text']);
+            }
+            else
+            {
+                for(var i=0; i<moti_event_handlers.length; i++)
+                {
+                    handler = moti_event_handlers[i];
+                    handler(event_name, args);
+                }
+            }
+        }
+
+
+
+            function isPC() {
+                var userAgentInfo = navigator.userAgent;
+                var Agents = ["Android", "iPhone",
+                            "SymbianOS", "Windows Phone",
+                            "iPad", "iPod"];
+                var flag = true;
+                for (var v = 0; v < Agents.length; v++) {
+                    if (userAgentInfo.indexOf(Agents[v]) > 0) {
+                        flag = false;
+                        break;
+                    }
+                }
+                return flag;
+            }
+            function init_viewport()
+            {
+                if(!isPC()) {
+                    if(/Android (\d+\.\d+)/.test(navigator.userAgent))
+                    {
+                        var version = parseFloat(RegExp.$1);
+
+                        if(version>2.3)
+                        {
+                            var width = window.outerWidth == 0 ? window.screen.width : window.outerWidth;
+                            var phoneScale = parseInt(width)/720;
+                            document.write('<meta name="viewport" content="width=720, minimum-scale = '+ phoneScale +', maximum-scale = '+ phoneScale +', target-densitydpi=device-dpi">');
+                        }
+                        else
+                        {
+                            document.write('<meta name="viewport" content="width=720, target-densitydpi=device-dpi">');    
+                        }
+                    }
+                    else if(navigator.userAgent.indexOf('iPhone') != -1)
+                    {
+                        var phoneScale = parseInt(window.screen.width)/720;
+                        document.write('<meta name="viewport" content="width=720, initial-scale=' + phoneScale +', user-scalable=no" /> ');         //0.75   0.82
+                    }
+                    else 
+                    {
+                        document.write('<meta name="viewport" content="width=720,initial-scale=0.64" /> ');         //0.75   0.82
+                    }
+                } else {
+                    document.write('<meta name="viewport" content="width=device-width, initial-scale=1">');
+                }
+            }
+            init_viewport();
+
+
+
+        function nodeid_129204_jumpto(eventname, args) {
+            if (eventname == 'biedegoguanzhu') {
+                window.location.href = 'http://mp.weixin.qq.com/s/BNqX2WKOg9EL5hQZa1_IqQ';
+            }
+        }
+    
+
+        function nodeid_129205_jumpto(eventname, args) {
+            if (eventname == 'yaowangoguanzhu') {
+                window.location.href = 'http://mp.weixin.qq.com/s/Bt51_u5UDFxulGlo9jK5pQ';
+            }
+        }
+    
+var this_app='health';
+var this_who='main';
+var this_room='drawyinxiang2';
+var this_mpid='magicmeih';
+
+            var Logger = {
+                data: {
+                    app: this_app,
+                    room: this_room,
+                    who: this_who,
+                    mpid: this_mpid,
+                    openid: this_openid,
+                    pageid: this_pageid
+                },
+                set: function(key, value) {
+                    if(!key || !value) return;
+                    this.data[key] = value;
+                },
+                send: function() {
+                    if(this.checkcookie()) {
+                        $.post(
+                            '/sys/debug/setlog?requesttype=mogoajax',
+                            this.data,
+                            function(res) {
+                                console.log(res);
+                            }
+                        )
+                    }
+                },
+                checkcookie: function() {
+                    var name = 'debug';
+                    var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+                    if(arr=document.cookie.match(reg)) {
+                        if( unescape(arr[2]) == 'true' ) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+                    else {
+                        return false;
+                    }
+                }
+            }
+        
+var this_pageid='c5ed1c422f6fc061b80feea5e6e6b603';
+var this_openid='openid00000000';
+
+    wx.config({
+        debug     : false,
+        appId     : 'wx99b36ff141f412cd',
+        timestamp : 10000,
+        nonceStr  : 'hello',
+        signature : 'f7f9e7ff87f0b09df23229bcd9443c2f9742906d',
+        jsApiList : [
+            'onMenuShareTimeline',
+            'onMenuShareAppMessage',
+            'onMenuShareQQ',
+            'onMenuShareQZone',
+            'closeWindow',
+            'hideAllNonBaseMenuItem',
+            'showMenuItems',
+            'showAllNonBaseMenuItem',
+            'chooseImage',
+            'uploadImage',
+            'startRecord',
+            'stopRecord',
+            'uploadVoice',
+            'playVoice',
+            'pauseVoice',
+            'stopVoice'
+            ]
+        });
+
+    function on_wxready()
+    {
+        
+    wx_share_title = "❤ 来^画一画^你印象中的我，匿名的哦~";
+    wx_share_desc  = "来画画你印象中的我";
+    wx_share_link  = "http://mobaoc.wexmall.cn/health/drawyinxiang2/gopainting?hostid=56054&pageid=c5ed1c422f6fc061b80feea5e6e6b603";
+    wx_share_img   = "http://img.jwgl.org.cn/image/draw/yu/hua.jpg";
+    wx_share_goto  = "http://mp.weixin.qq.com/s/Bt51_u5UDFxulGlo9jK5pQ";
+    reset_share_info();
+
+
+    wx_timeline_title = "❤ 来^画一画^你印象中的我，匿名的哦~";
+    wx_timeline_link  = "http://mobaoc.wexmall.cn/health/drawyinxiang2/gopainting?hostid=56054&pageid=c5ed1c422f6fc061b80feea5e6e6b603";
+    wx_timeline_img   = "http://img.jwgl.org.cn/image/draw/yu/hua.jpg";
+    wx_timeline_goto  = "http://mp.weixin.qq.com/s/Bt51_u5UDFxulGlo9jK5pQ";
+    reset_timeline_info();
+
+        moti_fire_event("wxready", null);
+    }
+
+    wx.ready(on_wxready);
+
+    var wx_share_title = "title";
+    var wx_share_desc  = "desc";
+    var wx_share_link  = "http://www.qq.com";
+    var wx_share_img   = "";
+    var wx_share_goto  = "";
+    
+    var wx_timeline_title = "title";
+    var wx_timeline_link  = "http://www.qq.com";
+    var wx_timeline_img   = "";
+    var wx_timeline_goto  = "";
+
+    function reset_timeline_title(title)
+    {
+        wx_timeline_title = title;
+        reset_timeline_info();
+    }
+
+    function reset_timeline_link(link)
+    {
+        wx_timeline_link = link;
+        reset_timeline_info();
+    }
+
+    function reset_timeline_img(img)
+    {
+        wx_timeline_img = img;
+        reset_timeline_info();
+    }
+    
+    function reset_timeline_goto(url)
+    {
+        wx_timeline_goto = url;
+        reset_timeline_info();
+    }
+
+    function reset_share_title(title)
+    {
+        wx_share_title = title;
+        reset_share_info();
+    }
+
+    function reset_share_desc(desc)
+    {
+        wx_share_desc = desc;
+        reset_share_info();
+    }
+
+    function reset_share_link(link)
+    {
+        wx_share_link = link;
+        reset_share_info();
+    }
+
+    function reset_share_img(img)
+    {
+        wx_share_img = img;
+        reset_share_info();
+    }
+
+    function reset_share_goto(url)
+    {
+        wx_share_goto = url;
+        reset_share_info();
+    }
+    
+    function reset_share_info()
+    {
+        wx.onMenuShareAppMessage({
+            title  : wx_share_title,
+            desc   : wx_share_desc,
+            link   : wx_share_link,
+            imgUrl : wx_share_img,
+            success : function(){
+                if(wx_share_goto != "")
+                {
+                    location.href = wx_share_goto;
+                }
+            },
+            fail: function(e) {
+                console.log('share fail', e);
+            },
+            complete: function(e) {
+                console.log('share complete', e);
+            }
+        });
+    }
+
+    function reset_timeline_info()
+    {
+        wx.onMenuShareTimeline({
+            title   : wx_timeline_title,
+            link    : wx_timeline_link,
+            imgUrl  : wx_timeline_img,
+            success : function(){
+                if(wx_timeline_goto != "")
+                {
+                    location.href = wx_timeline_goto;
+                }
+            },
+            fail: function(e) {
+                console.log('share fail', e);
+            },
+            complete: function(e) {
+                console.log('share complete', e);
+            }
+        });
+    }
+
+
+
+            function update_wxform()
+            {
+                
+            }
+            
+
+$(function() {
+
+moti_add_handler(nodeid_129204_jumpto);
+moti_add_handler(nodeid_129205_jumpto);
+
+            $(nodeid_129206).on('click', function() {
+                params = {}
+                params['event'] = 'yaowangoguanzhu';
+                moti_fire_event("yaowangoguanzhu", params);
+            })
+        
+
+            $(nodeid_129207).on('click', function() {
+                app = this_app
+                room = this_room
+                who = this_who
+                ishost = '1';
+who = 'gopainting';
+                update_wxform();
+                wxwebform.action = '/' + app + '/' + room + '/' + who + '?pageid=' + this_pageid + '&ishost=1';
+                wxwebform.submit();
+            })
+            
+
+            $(nodeid_129208).on('click', function() {
+                params = {}
+                params['event'] = 'biedegoguanzhu';
+                moti_fire_event("biedegoguanzhu", params);
+            })
+        
+
+        if(!is_weixin())
+        {
+            moti_fire_event("wxready", null);
+        }
+        
+})
+</script>
+<title></title>
+</head>
+<body  style='margin:0px'>
+        <div class="fix-bg" style='background-image:url("http://img.jwgl.org.cn/images/diudiu/drawme/sharebg2.jpg");'> </div>
+       <div  style='font-size:34px;text-shadow:0 2px 2px #fff;color:#000;padding:250px 0 0 0;width:720px;text-align:center'> </div><div  style='font-size:34px;text-shadow:0 2px 2px #fff;color:#000;padding:30px 0 0 0;width:720px;text-align:center'>目前已收到12副画作</div><div  style='font-size:40px;color:#000;height:600px;padding:20px;width:600px;background: #000;position:relative;margin:20px 40px 20px 60px; border: solid 23px #fff;text-align:center'><div id='nodeid_129192' class='img-contain_nodeid_129192' style='margin:-200px 0 0 0'><img id="nodeid_129192_img" style='vertical-align:top;font-size:29px;text-align:center;line-height:557px' src='http://imghd.motimaster.com/health/drawyinxiang2/gopainting/c5ed1c422f6fc061b80feea5e6e6b603/oFh8LwdYg0TvobvbdYfK3OPglEaY/canvasimg1499831014/magicmeih'></div></div><div  style='font-size:40px;color:#000;height:600px;padding:20px;width:600px;background: #000;position:relative;margin:20px 40px 20px 60px; border: solid 23px #fff;text-align:center'><div id='nodeid_129193' class='img-contain_nodeid_129193' style='margin:-200px 0 0 0'><img id="nodeid_129193_img" style='vertical-align:top;font-size:29px;text-align:center;line-height:557px' src='http://imghd.motimaster.com/health/drawyinxiang2/gopainting/c5ed1c422f6fc061b80feea5e6e6b603/oFh8LwSzYq27Njw9cylzO0F_KXGw/canvasimg1499830762/magicmeih'></div></div><div  style='font-size:40px;color:#000;height:600px;padding:20px;width:600px;background: #000;position:relative;margin:20px 40px 20px 60px; border: solid 23px #fff;text-align:center'><div id='nodeid_129194' class='img-contain_nodeid_129194' style='margin:-200px 0 0 0'><img id="nodeid_129194_img" style='vertical-align:top;font-size:29px;text-align:center;line-height:557px' src='http://imghd.motimaster.com/health/drawyinxiang2/gopainting/c5ed1c422f6fc061b80feea5e6e6b603/openid00000000/canvasimg1499830741/magicmeih'></div></div><div  style='font-size:40px;color:#000;height:600px;padding:20px;width:600px;background: #000;position:relative;margin:20px 40px 20px 60px; border: solid 23px #fff;text-align:center'><div id='nodeid_129195' class='img-contain_nodeid_129195' style='margin:-200px 0 0 0'><img id="nodeid_129195_img" style='vertical-align:top;font-size:29px;text-align:center;line-height:557px' src='http://imghd.motimaster.com/health/drawyinxiang2/gopainting/c5ed1c422f6fc061b80feea5e6e6b603/oFh8LwTwtaiPgdC71zLRSweFLDgk/canvasimg1499830627/magicmeih'></div></div><div  style='font-size:40px;color:#000;height:600px;padding:20px;width:600px;background: #000;position:relative;margin:20px 40px 20px 60px; border: solid 23px #fff;text-align:center'><div id='nodeid_129196' class='img-contain_nodeid_129196' style='margin:-200px 0 0 0'><img id="nodeid_129196_img" style='vertical-align:top;font-size:29px;text-align:center;line-height:557px' src='http://imghd.motimaster.com/health/drawyinxiang2/gopainting/c5ed1c422f6fc061b80feea5e6e6b603/oFh8Lwc1IqrywC60bnh-AaoLQwi4/canvasimg1499830596/magicmeih'></div></div><div  style='font-size:40px;color:#000;height:600px;padding:20px;width:600px;background: #000;position:relative;margin:20px 40px 20px 60px; border: solid 23px #fff;text-align:center'><div id='nodeid_129197' class='img-contain_nodeid_129197' style='margin:-200px 0 0 0'><img id="nodeid_129197_img" style='vertical-align:top;font-size:29px;text-align:center;line-height:557px' src='http://imghd.motimaster.com/health/drawyinxiang2/gopainting/c5ed1c422f6fc061b80feea5e6e6b603/oFh8LwSQTDrw2BCqUvWS2cauxBPE/canvasimg1499830531/magicmeih'></div></div><div  style='font-size:40px;color:#000;height:600px;padding:20px;width:600px;background: #000;position:relative;margin:20px 40px 20px 60px; border: solid 23px #fff;text-align:center'><div id='nodeid_129198' class='img-contain_nodeid_129198' style='margin:-200px 0 0 0'><img id="nodeid_129198_img" style='vertical-align:top;font-size:29px;text-align:center;line-height:557px' src='http://imghd.motimaster.com/health/drawyinxiang2/gopainting/c5ed1c422f6fc061b80feea5e6e6b603/oFh8LweXH8sHzenq257zSPve63rE/canvasimg1499830484/magicmeih'></div></div><div  style='font-size:40px;color:#000;height:600px;padding:20px;width:600px;background: #000;position:relative;margin:20px 40px 20px 60px; border: solid 23px #fff;text-align:center'><div id='nodeid_129199' class='img-contain_nodeid_129199' style='margin:-200px 0 0 0'><img id="nodeid_129199_img" style='vertical-align:top;font-size:29px;text-align:center;line-height:557px' src='http://imghd.motimaster.com/health/drawyinxiang2/gopainting/c5ed1c422f6fc061b80feea5e6e6b603/openid00000000/canvasimg1499830474/magicmeih'></div></div><div  style='font-size:40px;color:#000;height:600px;padding:20px;width:600px;background: #000;position:relative;margin:20px 40px 20px 60px; border: solid 23px #fff;text-align:center'><div id='nodeid_129200' class='img-contain_nodeid_129200' style='margin:-200px 0 0 0'><img id="nodeid_129200_img" style='vertical-align:top;font-size:29px;text-align:center;line-height:557px' src='http://imghd.motimaster.com/health/drawyinxiang2/gopainting/c5ed1c422f6fc061b80feea5e6e6b603/oFh8LweXH8sHzenq257zSPve63rE/canvasimg1499830469/magicmeih'></div></div><div  style='font-size:40px;color:#000;height:600px;padding:20px;width:600px;background: #000;position:relative;margin:20px 40px 20px 60px; border: solid 23px #fff;text-align:center'><div id='nodeid_129201' class='img-contain_nodeid_129201' style='margin:-200px 0 0 0'><img id="nodeid_129201_img" style='vertical-align:top;font-size:29px;text-align:center;line-height:557px' src='http://imghd.motimaster.com/health/drawyinxiang2/gopainting/c5ed1c422f6fc061b80feea5e6e6b603/oFh8LwaSZFuih8_a6UELC1Cl05XI/canvasimg1499830403/magicmeih'></div></div><div  style='font-size:40px;color:#000;height:600px;padding:20px;width:600px;background: #000;position:relative;margin:20px 40px 20px 60px; border: solid 23px #fff;text-align:center'><div id='nodeid_129202' class='img-contain_nodeid_129202' style='margin:-200px 0 0 0'><img id="nodeid_129202_img" style='vertical-align:top;font-size:29px;text-align:center;line-height:557px' src='http://imghd.motimaster.com/health/drawyinxiang2/gopainting/c5ed1c422f6fc061b80feea5e6e6b603/oFh8LwasAGrbfIGv3wY1essCau2E/canvasimg1499830292/magicmeih'></div></div><div  style='font-size:40px;color:#000;height:600px;padding:20px;width:600px;background: #000;position:relative;margin:20px 40px 20px 60px; border: solid 23px #fff;text-align:center'><div id='nodeid_129203' class='img-contain_nodeid_129203' style='margin:-200px 0 0 0'><img id="nodeid_129203_img" style='vertical-align:top;font-size:29px;text-align:center;line-height:557px' src='http://imghd.motimaster.com/health/drawyinxiang2/gopainting/c5ed1c422f6fc061b80feea5e6e6b603/oFh8Lwe5bIaeMtcjJcgB9St7Q9zE/canvasimg1499830199/magicmeih'></div></div><div id='nodeid_129206' class='img-contain_nodeid_129206' style='width:500px;margin:20px 20px 20px 110px;-webkit-animation:ef_48225 2s linear 0s infinite normal both'><img id="nodeid_129206_img" style='vertical-align:top;font-size:29px;text-align:center;line-height:557px' src='http://img.jwgl.org.cn/images/diudiu/drawme/button5.jpg'></div><div id='nodeid_129207' class='img-contain_nodeid_129207' style='width:500px;margin:0px 20px 20px 110px'><img id="nodeid_129207_img" style='vertical-align:top;font-size:29px;text-align:center;line-height:557px' src='http://img.jwgl.org.cn/images/diudiu/drawme/button6.jpg'></div><div id='nodeid_129208' class='img-contain_nodeid_129208' style='width:500px;margin:0px 20px 20px 110px'><img id="nodeid_129208_img" style='vertical-align:top;font-size:29px;text-align:center;line-height:557px' src='http://img.jwgl.org.cn/images/diudiu/drawme/button10.jpg'></div>
+            <form id='wxwebform' action='' method='post'>
+            </form>
+            </body>
+            </html>
