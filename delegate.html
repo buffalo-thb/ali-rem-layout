@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>事件代理</title>
+</head>
+<body>
+    <ul id="container">
+        <li data-index="1">1</li>
+        <li data-index="2">2</li>
+        <li data-index="3">3</li>
+        <li data-index="4">4</li>
+        <li data-index="5">5</li>
+        <li data-index="6">6</li>
+        <li data-index="7">7</li>
+        <li data-index="8">8</li>
+        <li data-index="9">9</li>
+        <li data-index="10">10</li>
+    </ul>
+    <script>
+        var oUl = document.getElementById('container');
+        oUl.onclick = function(ev) {
+            var ev = ev || window.event;//event的兼容性写法
+            var target = ev.target || ev.srcElement;//ie中获取点击源dom节点的方式是ev.srcElement
+            var index = target.getAttribute('data-index');
+            if(target.nodeName.toLowerCase() === 'li') {
+                alert('我的序号是：' + index + '。我是事件代理过来的点击，点击li出发了ul的绑定事件！');
+            }
+        }
+        
+    </script>
+</body>
+</html>

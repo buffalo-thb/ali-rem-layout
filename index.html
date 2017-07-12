@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>主页----学习javascript</title>
+</head>
+<body>
+    
+    <script data-main="js/main" src="libs/require.js"></script>
+    <script>
+        require(['jquery.dev', 'huiwenshu'], function($, huiwenshu) {
+            $(function() {
+                console.log('--------我是利用shim引入的非AMD规范的jquery');
+                huiwenshu.func();
+            })
+        });
+        
+    </script>
+</body>
+</html>
